@@ -125,8 +125,17 @@ function getPolynom(...coefficients) {
  *   ...
  *   memoizer() => the same random number  (next run, returns the previous cached result)
  */
-function memoize(/* func */) {
-  throw new Error('Not implemented');
+function memoize(func) {
+  let called = false;
+  let cachedResult;
+
+  return () => {
+    if (!called) {
+      cachedResult = func();
+      called = true;
+    }
+    return cachedResult;
+  };
 }
 
 /**
@@ -144,8 +153,20 @@ function memoize(/* func */) {
  * }, 2);
  * retryer() => 2
  */
-function retry(/* func, attempts */) {
-  throw new Error('Not implemented');
+function retry(func, attempts) {
+  return () => {
+    let lastError;
+
+    for (let i = 0; i < attempts; i + 1) {
+      try {
+        return func();
+      } catch (error) {
+        lastError = error;
+      }
+    }
+
+    throw lastError;
+  };
 }
 
 /**
